@@ -6,20 +6,13 @@ import 'package:ujidatapanen/screen/login_screen.dart';
 import 'package:ujidatapanen/service/ViewLahanService.dart';
 import 'package:ujidatapanen/provider/AuthProvider.dart';
 
-void main() {
-  runApp(MyApp());
-}
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: HomeView(),
-    );
-  }
-}
-
+// home.dart
 class HomeView extends StatefulWidget {
+  final int userId;
+
+  HomeView({required this.userId});
+
   @override
   _HomeViewState createState() => _HomeViewState();
 }
@@ -31,13 +24,11 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    // Fetch data di dalam initState
     fetchData();
   }
 
   void fetchData() {
-    int userId = Provider.of<AuthProvider>(context, listen: false).userId ?? 0;
-    _lahanFuture = ViewLahanService().fetchLahan(userId);
+    _lahanFuture = ViewLahanService().fetchLahan(widget.userId);
   }
 
   @override
@@ -54,14 +45,12 @@ class _HomeViewState extends State<HomeView> {
             onSelected: (value) {
               switch (value) {
                 case 'Profile':
-                  // Navigasi ke halaman Profile saat menu dipilih
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => LoginPage()),
                   );
                   break;
                 case 'Logout':
-                  // Navigasi ke halaman Login saat menu dipilih
                   Provider.of<AuthProvider>(context, listen: false).clearUser();
                   Navigator.pushReplacement(
                     context,
@@ -156,7 +145,6 @@ class _HomeViewState extends State<HomeView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigasi ke layar LahanForm saat tombol ditekan
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => LahanScreen()),
@@ -169,3 +157,4 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 }
+

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ujidatapanen/controller/login_controller.dart';
-import 'package:ujidatapanen/provider/AuthProvider.dart';
 import 'package:ujidatapanen/screen/register_screen.dart';
 import 'package:ujidatapanen/screen/home.dart';
 
@@ -49,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 20),
                 Text(
                   'Welcome Back!',
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
@@ -89,14 +88,11 @@ class _LoginPageState extends State<LoginPage> {
                     if (_formKey.currentState?.validate() ?? false) {
                       String email = emailController.text;
                       String password = passwordController.text;
-                      int? userId = await _loginController.login(
-                          context, email, password);
+                      int? userId = await _loginController.login(context, email, password);
                       if (userId != null) {
-                        Provider.of<AuthProvider>(context, listen: false)
-                            .setUserId(userId);
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => HomeView()),
+                          MaterialPageRoute(builder: (context) => HomeView(userId: userId)),
                         );
                       }
                     }

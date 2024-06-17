@@ -18,8 +18,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Tani Jaya',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
       home: LoginPage(),
-      debugShowCheckedModeBanner: false,
     );
   }
 }
