@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class LoginService {
   Future<bool> login(String email, String password) async {
-    var url = Uri.parse('http://10.69.11.202/tani/login.php');
+    var url = Uri.parse('http://192.168.0.125/tani/login.php');
     var response = await http.post(url, body: {
       'action': 'login',
       'email': email,
