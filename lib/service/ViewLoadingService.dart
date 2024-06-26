@@ -1,17 +1,17 @@
-// ViewLahanService.dart
+// ViewLoadingService.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class ViewLahanService {
-  static const String apiUrl = 'http://192.168.0.187/tani/get_lahan.php';
+class ViewLoadingService {
+  static const String apiUrl = 'http://192.168.0.187/tani/get_loading.php';
 
-  Future<List<dynamic>> fetchLahan(int userId) async {
+  Future<List<dynamic>> fetchLoading(int userId) async {
     final response = await http.get(Uri.parse('$apiUrl?user_id=$userId'));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to load lahan');
+      throw Exception('Failed to load loading data');
     }
   }
 }

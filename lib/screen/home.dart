@@ -1,12 +1,12 @@
-// home.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:ujidatapanen/provider/AuthProvider.dart';
 import 'package:ujidatapanen/screen/AddLahanScreen.dart';
+import 'package:ujidatapanen/screen/ViewLoadingScreen.dart';
 import 'package:ujidatapanen/screen/login_screen.dart';
 import 'package:ujidatapanen/screen/tentang_screen.dart';
 import 'package:ujidatapanen/service/ViewLahanService.dart';
-import 'package:ujidatapanen/provider/AuthProvider.dart';
 
 class HomeView extends StatefulWidget {
   final int userId;
@@ -121,6 +121,15 @@ class _HomeViewState extends State<HomeView> {
               ];
             },
           ),
+          IconButton(
+            icon: Icon(Icons.list), // Tambahkan icon untuk navigasi ke ViewLoadingScreen
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ViewLoadingScreen()),
+              );
+            },
+          ),
         ],
       ),
       body: Column(
@@ -169,7 +178,8 @@ class _HomeViewState extends State<HomeView> {
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
+                                      Colors.white,
+                                    ),
                                   ),
                                 ),
                             ],
