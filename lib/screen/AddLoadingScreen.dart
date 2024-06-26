@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:ujidatapanen/controller/AddLoadingController.dart';
 import 'package:ujidatapanen/model/loading.dart';
 import 'package:ujidatapanen/provider/AuthProvider.dart';
-import 'package:ujidatapanen/screen/home.dart';
 
 class AddLoadingScreen extends StatefulWidget {
   const AddLoadingScreen({Key? key}) : super(key: key);
@@ -73,10 +72,7 @@ class _AddLoadingScreenState extends State<AddLoadingScreen> {
                       backgroundColor: Colors.blue,
                     ),
                   );
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomeView(userId: userId)),
-                  );
+                  Navigator.pop(context, true); // Kembali ke ViewLoadingScreen dengan nilai true
                 }
               },
               child: const Text('Tambah Loading'),
