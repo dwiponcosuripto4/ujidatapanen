@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ujidatapanen/screen/home.dart';
 
 class TentangView extends StatefulWidget {
   @override
@@ -10,7 +9,6 @@ class TentangView extends StatefulWidget {
 class _TentangViewState extends State<TentangView> {
   String _username = '';
   String _email = '';
-  int _userId = 0;
 
   @override
   void initState() {
@@ -34,10 +32,7 @@ class _TentangViewState extends State<TentangView> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => HomeView(userId: _userId)),
-            );
+            Navigator.pop(context); // Navigasi kembali normal
           },
         ),
       ),
@@ -87,9 +82,8 @@ class _TentangViewState extends State<TentangView> {
       ),
     );
   }
-}
 
-Widget buildInfoRow(IconData icon, String label, String value) {
+  Widget buildInfoRow(IconData icon, String label, String value) {
     return Row(
       children: [
         Icon(icon, color: Colors.white, size: 32),
@@ -118,3 +112,4 @@ Widget buildInfoRow(IconData icon, String label, String value) {
       ],
     );
   }
+}

@@ -79,10 +79,9 @@ class _HomeViewState extends State<HomeView> {
             onSelected: (value) {
               switch (value) {
                 case 'Tentang':
-                  Navigator.pushAndRemoveUntil(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => TentangView()),
-                    (route) => false,
                   );
                   break;
                 case 'Logout':
@@ -122,7 +121,7 @@ class _HomeViewState extends State<HomeView> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.list), // Tambahkan icon untuk navigasi ke ViewLoadingScreen
+            icon: Icon(Icons.list),
             onPressed: () {
               Navigator.push(
                 context,
