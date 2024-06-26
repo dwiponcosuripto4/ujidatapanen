@@ -295,11 +295,14 @@ class _HomeViewState extends State<HomeView> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          bool? added = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => LahanScreen()),
           );
+          if (added != null && added) {
+            fetchData();
+          }
         },
         child: Icon(Icons.add),
         shape: CircleBorder(),

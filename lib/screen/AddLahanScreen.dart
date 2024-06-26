@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:ujidatapanen/controller/AddLahanController.dart';
 import 'package:ujidatapanen/model/lahan.dart';
 import 'package:ujidatapanen/provider/AuthProvider.dart';
-import 'package:ujidatapanen/screen/home.dart';
 
 class LahanScreen extends StatefulWidget {
   const LahanScreen({Key? key}) : super(key: key);
@@ -67,10 +66,7 @@ class _LahanScreenState extends State<LahanScreen> {
                       backgroundColor: Colors.blue,
                     ),
                   );
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomeView(userId: userId)),
-                  );
+                  Navigator.pop(context, true); // Kembali ke halaman HomeView
                 }
               },
               child: const Text('Tambah Lahan'),
