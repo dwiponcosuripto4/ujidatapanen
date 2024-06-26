@@ -69,7 +69,7 @@ class _LahanScreenState extends State<LahanScreen> {
                   );
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => HomeView(userId: userId,)),
+                    MaterialPageRoute(builder: (context) => HomeView(userId: userId)),
                   );
                 }
               },
