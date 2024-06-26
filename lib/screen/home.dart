@@ -301,7 +301,9 @@ class _HomeViewState extends State<HomeView> {
             MaterialPageRoute(builder: (context) => LahanScreen()),
           );
           if (added != null && added) {
-            fetchData();
+            setState(() {
+              fetchData();
+            });
           }
         },
         child: Icon(Icons.add),
