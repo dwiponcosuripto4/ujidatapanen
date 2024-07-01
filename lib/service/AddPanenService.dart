@@ -4,7 +4,7 @@ import '../model/panen.dart';
 
 class PanenService {
   Future<bool> createPanen(Panen panen) async {
-    var url = Uri.parse('http://192.168.0.106/tani/add_panen.php');
+    var url = Uri.parse('http://192.168.100.160/tani/add_panen.php');
     var response = await http.post(url, body: {
       'no_panen': panen.noPanen,
       'tanggal_panen': panen.tanggalPanen.toIso8601String(),
