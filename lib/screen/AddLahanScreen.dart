@@ -29,7 +29,7 @@ class _LahanScreenState extends State<LahanScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF1A4D2E),
+        backgroundColor: Color.fromARGB(255, 11, 37, 22),
         title: Text(
           'Tambah Lahan',
           style: TextStyle(
