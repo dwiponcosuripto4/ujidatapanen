@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ujidatapanen/controller/AddPanenController.dart';
+import 'package:ujidatapanen/model/loading.dart';
 import 'package:ujidatapanen/model/panen.dart';
 import 'package:ujidatapanen/provider/AuthProvider.dart';
 import 'package:ujidatapanen/service/ViewLoadingService.dart';
@@ -23,7 +24,7 @@ class _AddPanenScreenState extends State<AddPanenScreen> {
   TextEditingController deskripsiController = TextEditingController();
   TextEditingController idLoadingController = TextEditingController();
   int selectedLoadingId = 0;
-  List<dynamic> loadingList = []; // Untuk menyimpan daftar Loading
+  List<Loading> loadingList = []; // Untuk menyimpan daftar Loading
   DateTime selectedDate = DateTime.now();
 
   @override
@@ -34,14 +35,12 @@ class _AddPanenScreenState extends State<AddPanenScreen> {
 
   void fetchLoadingData() async {
     try {
-      int userId =
-          Provider.of<AuthProvider>(context, listen: false).userId ?? 0;
-      List<dynamic> data = await ViewLoadingService().fetchLoading(userId);
+      int userId = Provider.of<AuthProvider>(context, listen: false).userId ?? 0;
+      List<Loading> data = await ViewLoadingService().fetchLoading(userId);
       setState(() {
         loadingList = data;
         if (loadingList.isNotEmpty) {
-          selectedLoadingId = loadingList[0][
-              'id']; // Inisialisasi selectedLoadingId dengan nilai pertama jika tersedia
+          selectedLoadingId = loadingList[0].id; // Inisialisasi selectedLoadingId dengan nilai pertama jika tersedia
         }
       });
     } catch (e) {
@@ -117,8 +116,8 @@ class _AddPanenScreenState extends State<AddPanenScreen> {
                 value: selectedLoadingId,
                 items: loadingList.map((loading) {
                   return DropdownMenuItem<int>(
-                    value: loading['id'],
-                    child: Text(loading['nama_loading']),
+                    value: loading.id,
+                    child: Text(loading.namaLoading),
                   );
                 }).toList(),
                 onChanged: (int? value) {
@@ -159,8 +158,7 @@ class _AddPanenScreenState extends State<AddPanenScreen> {
                     idLoading: selectedLoadingId,
                   );
 
-                  bool createSuccess =
-                      await _panenController.createPanen(context, panen);
+                  bool createSuccess = await _panenController.createPanen(context, panen);
 
                   if (createSuccess) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -170,15 +168,13 @@ class _AddPanenScreenState extends State<AddPanenScreen> {
                         backgroundColor: Colors.blue,
                       ),
                     );
-                    Navigator.pop(
-                        context, true); // Kembali ke halaman sebelumnya
+                    Navigator.pop(context, true); // Kembali ke halaman sebelumnya
                   }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green, // Ubah warna tombol jika perlu
                   textStyle: const TextStyle(fontSize: 16),
-                  fixedSize:
-                      const Size(200, 50), // Ubah ukuran tombol jika perlu
+                  fixedSize: const Size(200, 50), // Ubah ukuran tombol jika perlu
                 ),
                 child: const Text('Simpan'),
               ),

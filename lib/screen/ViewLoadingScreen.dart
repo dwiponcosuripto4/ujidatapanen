@@ -6,7 +6,10 @@ import 'package:ujidatapanen/provider/AuthProvider.dart';
 import 'package:ujidatapanen/screen/login_screen.dart';
 import 'package:ujidatapanen/screen/map_screen.dart';
 import 'package:ujidatapanen/screen/tentang_screen.dart';
+import 'package:ujidatapanen/screen/home.dart';
+import 'package:ujidatapanen/screen/AddLoadingScreen.dart';
 import 'package:ujidatapanen/service/ViewLoadingService.dart';
+import 'package:ujidatapanen/service/DeleteLoadingService.dart'; // Import DeleteLoadingService
 
 class ViewLoadingScreen extends StatefulWidget {
   @override
@@ -61,11 +64,15 @@ class _ViewLoadingScreenState extends State<ViewLoadingScreen> {
   }
 
   void showEditDialog(BuildContext context, Loading loading) {
-    TextEditingController namaLoadingController = TextEditingController(text: loading.namaLoading);
-    TextEditingController pemilikController = TextEditingController(text: loading.pemilik);
-    TextEditingController alamatController = TextEditingController(text: loading.alamat);
+    TextEditingController namaLoadingController =
+        TextEditingController(text: loading.namaLoading);
+    TextEditingController pemilikController =
+        TextEditingController(text: loading.pemilik);
+    TextEditingController alamatController =
+        TextEditingController(text: loading.alamat);
     String? lokasi = loading.lokasi;
-    final EditLoadingController _editLoadingController = EditLoadingController();
+    final EditLoadingController _editLoadingController =
+        EditLoadingController();
 
     showDialog(
       context: context,
@@ -77,7 +84,8 @@ class _ViewLoadingScreenState extends State<ViewLoadingScreen> {
             children: [
               TextFormField(
                 controller: namaLoadingController,
-                decoration: const InputDecoration(labelText: 'Nama Loading'),
+                decoration:
+                    const InputDecoration(labelText: 'Nama Loading'),
               ),
               TextFormField(
                 controller: pemilikController,
@@ -141,7 +149,8 @@ class _ViewLoadingScreenState extends State<ViewLoadingScreen> {
                   userId: loading.userId,
                 );
 
-                bool updateSuccess = await _editLoadingController.updateLoading(context, updatedLoading);
+                bool updateSuccess = await _editLoadingController.updateLoading(
+                    context, updatedLoading);
                 if (updateSuccess) {
                   setState(() {
                     fetchData();
@@ -162,6 +171,48 @@ class _ViewLoadingScreenState extends State<ViewLoadingScreen> {
       },
     );
   }
+
+  void deleteLoading(BuildContext context, int id) async {
+  try {
+    bool deleteSuccess = await DeleteLoadingService().deleteLoading(id);
+    if (deleteSuccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Berhasil menghapus loading'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      setState(() {
+        fetchData();
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal menghapus loading'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  } catch (e) {
+    String errorMessage = 'Terjadi kesalahan: $e';
+    if (e.toString().contains('Loading sedang digunakan!')) {
+      errorMessage = 'Loading sedang digunakan!';
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(errorMessage),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+}
+
+void refreshData() {
+    setState(() {
+      _loadingFuture = ViewLoadingService().fetchLoading(userId);
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -246,6 +297,37 @@ class _ViewLoadingScreenState extends State<ViewLoadingScreen> {
                           showEditDialog(context, loading);
                         },
                       ),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Konfirmasi'),
+                                content: Text(
+                                  'Anda yakin ingin menghapus ${loading.namaLoading}?',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Batal'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      deleteLoading(context, loading.id);
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Hapus'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ],
                   ),
                 );
@@ -253,6 +335,126 @@ class _ViewLoadingScreenState extends State<ViewLoadingScreen> {
             );
           }
         },
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        notchMargin: 6.0,
+        color: Color(0xFF059212),
+        child: Container(
+          height: 60.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.home),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomeView(userId: userId),
+                    ),
+                  );
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  showSearchDialog(context);
+                },
+              ),
+              SizedBox(width: 10),
+              IconButton(
+                icon: Icon(Icons.list),
+                onPressed: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddLoadingScreen()),
+                  );
+
+                  if (result != null && result == true) {
+                    fetchData(); // Ambil ulang data jika berhasil menambahkan loading
+                  }
+                },
+              ),
+              PopupMenuButton<String>(
+                icon: Icon(Icons.person),
+                onSelected: (value) {
+                  switch (value) {
+                    case 'Tentang':
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => TentangView()),
+                      );
+                      break;
+                    case 'Logout':
+                      Provider.of<AuthProvider>(context, listen: false)
+                          .clearUser();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
+                      break;
+                  }
+                },
+                itemBuilder: (BuildContext context) {
+                  return [
+                    PopupMenuItem(
+                      value: 'Tentang',
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline,
+                            size: 15,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            'Tentang',
+                            style: TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 'Logout',
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.logout,
+                            size: 15,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            'Logout',
+                            style: TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ];
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddLoadingScreen()),
+          );
+
+          if (result != null && result == true) {
+            refreshData(); // Ambil ulang data jika berhasil menambahkan loading
+          }
+        },
+        backgroundColor: Color.fromARGB(255, 48, 110, 48),
+        child: Icon(Icons.add),
       ),
     );
   }

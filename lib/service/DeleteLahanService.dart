@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class LahanService {
-  static const String baseUrl = "http://192.168.100.160/tani/delete_lahan.php";
+  static const String baseUrl = "http://192.168.0.109/tani/delete_lahan.php";
 
   Future<void> deleteLahan(int id) async {
     try {
