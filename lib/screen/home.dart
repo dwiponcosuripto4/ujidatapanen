@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:ujidatapanen/controller/Edit_Lahan_Diaolog.dart';
 import 'package:ujidatapanen/provider/AuthProvider.dart';
 import 'package:ujidatapanen/screen/AddLahanScreen.dart';
 import 'package:ujidatapanen/screen/ViewLahanDetail.dart';
@@ -9,7 +10,7 @@ import 'package:ujidatapanen/screen/login_screen.dart';
 import 'package:ujidatapanen/screen/tentang_screen.dart';
 import 'package:ujidatapanen/service/ViewLahanService.dart';
 import 'package:ujidatapanen/model/lahan.dart';
-import 'package:ujidatapanen/service/deleteLahanService.dart'; // Import deleteLahanService
+import 'package:ujidatapanen/service/deleteLahanService.dart';
 
 class HomeView extends StatefulWidget {
   final int userId;
@@ -260,8 +261,17 @@ class _HomeViewState extends State<HomeView> {
                                     IconButton(
                                       icon: Icon(Icons.edit),
                                       color: Color.fromARGB(255, 248, 248, 249),
-                                      onPressed: () {
-                                        // Edit action
+                                      onPressed: () async {
+                                        bool? updated = await showDialog(
+                                          context: context,
+                                          builder: (context) =>
+                                              EditLahanDialog(lahan: lahan),
+                                        );
+                                        if (updated != null && updated) {
+                                          setState(() {
+                                            fetchData(); // Refresh data setelah edit
+                                          });
+                                        }
                                       },
                                     ),
                                     IconButton(

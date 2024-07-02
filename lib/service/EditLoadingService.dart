@@ -4,7 +4,7 @@ import '../model/loading.dart';
 
 class EditLoadingService {
   Future<bool> updateLoading(Loading loading) async {
-    var url = Uri.parse('http://192.168.0.109/tani/edit_loading.php');
+    var url = Uri.parse('http://192.168.0.193/tani/edit_loading.php');
     var response = await http.post(url, body: {
       'id': loading.id.toString(),
       'nama_loading': loading.namaLoading,
