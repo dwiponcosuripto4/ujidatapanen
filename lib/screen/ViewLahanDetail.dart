@@ -3,7 +3,6 @@ import 'package:ujidatapanen/model/lahan.dart';
 import 'package:ujidatapanen/model/panen.dart';
 import 'package:ujidatapanen/screen/AddPanenScreen.dart';
 import 'package:ujidatapanen/service/ViewPanenService.dart';
-import 'package:flutter/widgets.dart';
 
 class ViewLahanDetail extends StatefulWidget {
   final Lahan lahan;
@@ -112,7 +111,8 @@ class _ViewLahanDetailState extends State<ViewLahanDetail> with RouteAware {
                   bool? result = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AddPanenScreen(idLahan: widget.lahan.id),
+                      builder: (context) =>
+                          AddPanenScreen(idLahan: widget.lahan.id),
                     ),
                   );
                   if (result == true) {
@@ -173,12 +173,17 @@ class _ViewLahanDetailState extends State<ViewLahanDetail> with RouteAware {
 
   Widget buildInfoRow(IconData icon, String label, String value) {
     return Row(
+      crossAxisAlignment:
+          CrossAxisAlignment.start, // Make sure content stacks vertically
       children: [
         Icon(icon, color: Colors.white),
         SizedBox(width: 8),
-        Text(
-          '$label: $value',
-          style: TextStyle(fontSize: 16, color: Colors.white),
+        Expanded(
+          // Expanded to make sure the text wraps within the available space
+          child: Text(
+            '$label: $value',
+            style: TextStyle(fontSize: 16, color: Colors.white),
+          ),
         ),
       ],
     );
@@ -186,4 +191,5 @@ class _ViewLahanDetailState extends State<ViewLahanDetail> with RouteAware {
 }
 
 // Global RouteObserver
-final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
+final RouteObserver<ModalRoute<void>> routeObserver =
+    RouteObserver<ModalRoute<void>>();
