@@ -6,10 +6,10 @@ import 'package:ujidatapanen/provider/AuthProvider.dart';
 import 'package:ujidatapanen/screen/login_screen.dart';
 import 'package:ujidatapanen/screen/map_screen.dart';
 import 'package:ujidatapanen/screen/tentang_screen.dart';
+import 'package:ujidatapanen/service/DeleteLoadingService.dart';
+import 'package:ujidatapanen/service/ViewLoadingService.dart';
 import 'package:ujidatapanen/screen/home.dart';
 import 'package:ujidatapanen/screen/AddLoadingScreen.dart';
-import 'package:ujidatapanen/service/ViewLoadingService.dart';
-import 'package:ujidatapanen/service/DeleteLoadingService.dart'; // Import DeleteLoadingService
 
 class ViewLoadingScreen extends StatefulWidget {
   @override
@@ -17,7 +17,7 @@ class ViewLoadingScreen extends StatefulWidget {
 }
 
 class _ViewLoadingScreenState extends State<ViewLoadingScreen> {
-  late Future<List<dynamic>> _loadingFuture;
+  late Future<List<Loading>> _loadingFuture;
   String searchQuery = '';
   late int userId;
 
@@ -84,8 +84,7 @@ class _ViewLoadingScreenState extends State<ViewLoadingScreen> {
             children: [
               TextFormField(
                 controller: namaLoadingController,
-                decoration:
-                    const InputDecoration(labelText: 'Nama Loading'),
+                decoration: const InputDecoration(labelText: 'Nama Loading'),
               ),
               TextFormField(
                 controller: pemilikController,
@@ -173,46 +172,45 @@ class _ViewLoadingScreenState extends State<ViewLoadingScreen> {
   }
 
   void deleteLoading(BuildContext context, int id) async {
-  try {
-    bool deleteSuccess = await DeleteLoadingService().deleteLoading(id);
-    if (deleteSuccess) {
+    try {
+      bool deleteSuccess = await DeleteLoadingService().deleteLoading(id);
+      if (deleteSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Berhasil menghapus loading'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        setState(() {
+          fetchData();
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Gagal menghapus loading'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      String errorMessage = 'Terjadi kesalahan: $e';
+      if (e.toString().contains('Loading sedang digunakan!')) {
+        errorMessage = 'Loading sedang digunakan!';
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Berhasil menghapus loading'),
-          backgroundColor: Colors.green,
-        ),
-      );
-      setState(() {
-        fetchData();
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Gagal menghapus loading'),
+          content: Text(errorMessage),
           backgroundColor: Colors.red,
         ),
       );
     }
-  } catch (e) {
-    String errorMessage = 'Terjadi kesalahan: $e';
-    if (e.toString().contains('Loading sedang digunakan!')) {
-      errorMessage = 'Loading sedang digunakan!';
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(errorMessage),
-        backgroundColor: Colors.red,
-      ),
-    );
   }
-}
 
-void refreshData() {
+  void refreshData() {
     setState(() {
       _loadingFuture = ViewLoadingService().fetchLoading(userId);
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -268,7 +266,8 @@ void refreshData() {
           ),
         ],
       ),
-      body: FutureBuilder<List<dynamic>>(
+      backgroundColor: Color(0xFF1A4D2E),
+      body: FutureBuilder<List<Loading>>(
         future: _loadingFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -285,50 +284,74 @@ void refreshData() {
               itemCount: filteredLoadingList.length,
               itemBuilder: (context, index) {
                 final loading = filteredLoadingList[index];
-                return ListTile(
-                  title: Text(loading.namaLoading),
-                  subtitle: Text(loading.lokasi),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          showEditDialog(context, loading);
+                return Container(
+                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+                  height: 80,
+                  child: Opacity(
+                    opacity: 0.8, // Atur nilai opacity sesuai keinginan
+                    child: Card(
+                      color: Colors.white
+                          .withOpacity(0.10), // Atur warna transparan
+                      elevation: 4, // Atur nilai elevation untuk efek 3D
+                      child: ListTile(
+                        title: Text(
+                          loading.namaLoading,
+                          style: TextStyle(
+                              color: Colors.white), // Sesuaikan warna teks
+                        ),
+                        subtitle: Text(
+                          loading.lokasi,
+                          style: TextStyle(
+                              color: Colors.white), // Sesuaikan warna teks
+                        ),
+                        onTap: () {
+                          // Implementasi onTap
                         },
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.edit),
+                              color: Color.fromARGB(255, 248, 248, 249),
+                              onPressed: () {
+                                showEditDialog(context, loading);
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.delete),
+                              color: Color.fromARGB(255, 248, 248, 249),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Delete Loading'),
+                                      content: Text(
+                                          'Are you sure you want to delete ${loading.namaLoading}?'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            deleteLoading(context, loading.id);
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('Delete'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Konfirmasi'),
-                                content: Text(
-                                  'Anda yakin ingin menghapus ${loading.namaLoading}?',
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Batal'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      deleteLoading(context, loading.id);
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('Hapus'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
+                    ),
                   ),
                 );
               },
@@ -453,8 +476,10 @@ void refreshData() {
             refreshData(); // Ambil ulang data jika berhasil menambahkan loading
           }
         },
-        backgroundColor: Color.fromARGB(255, 48, 110, 48),
         child: Icon(Icons.add),
+        backgroundColor: Color.fromARGB(255, 191, 200, 205),
+        shape: CircleBorder(),
+        elevation: 8.0,
       ),
     );
   }
