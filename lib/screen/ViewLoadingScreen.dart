@@ -10,6 +10,7 @@ import 'package:ujidatapanen/service/DeleteLoadingService.dart';
 import 'package:ujidatapanen/service/ViewLoadingService.dart';
 import 'package:ujidatapanen/screen/home.dart';
 import 'package:ujidatapanen/screen/AddLoadingScreen.dart';
+import 'package:ujidatapanen/screen/ViewLoadingDetail.dart'; // Pastikan import ViewLoadingDetail.dart
 
 class ViewLoadingScreen extends StatefulWidget {
   @override
@@ -305,7 +306,13 @@ class _ViewLoadingScreenState extends State<ViewLoadingScreen> {
                               color: Colors.white), // Sesuaikan warna teks
                         ),
                         onTap: () {
-                          // Implementasi onTap
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ViewLoadingDetail(loading: loading, userId: userId,),
+                            ),
+                          );
                         },
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -337,7 +344,8 @@ class _ViewLoadingScreenState extends State<ViewLoadingScreen> {
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            deleteLoading(context, loading.id);
+                                            deleteLoading(
+                                                context, loading.id);
                                             Navigator.of(context).pop();
                                           },
                                           child: Text('Delete'),
@@ -359,128 +367,21 @@ class _ViewLoadingScreenState extends State<ViewLoadingScreen> {
           }
         },
       ),
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        notchMargin: 6.0,
-        color: Color(0xFF059212),
-        child: Container(
-          height: 60.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.home),
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomeView(userId: userId),
-                    ),
-                  );
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  showSearchDialog(context);
-                },
-              ),
-              SizedBox(width: 10),
-              IconButton(
-                icon: Icon(Icons.list),
-                onPressed: () async {
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddLoadingScreen()),
-                  );
-
-                  if (result != null && result == true) {
-                    fetchData(); // Ambil ulang data jika berhasil menambahkan loading
-                  }
-                },
-              ),
-              PopupMenuButton<String>(
-                icon: Icon(Icons.person),
-                onSelected: (value) {
-                  switch (value) {
-                    case 'Tentang':
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => TentangView()),
-                      );
-                      break;
-                    case 'Logout':
-                      Provider.of<AuthProvider>(context, listen: false)
-                          .clearUser();
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                      );
-                      break;
-                  }
-                },
-                itemBuilder: (BuildContext context) {
-                  return [
-                    PopupMenuItem(
-                      value: 'Tentang',
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.info_outline,
-                            size: 15,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            'Tentang',
-                            style: TextStyle(
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: 'Logout',
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.logout,
-                            size: 15,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            'Logout',
-                            style: TextStyle(
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ];
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final result = await Navigator.push(
+        onPressed: () {
+          Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => AddLoadingScreen()),
-          );
-
-          if (result != null && result == true) {
-            refreshData(); // Ambil ulang data jika berhasil menambahkan loading
-          }
+          ).then((value) {
+            if (value != null && value) {
+              refreshData();
+            }
+          });
         },
         child: Icon(Icons.add),
-        backgroundColor: Color.fromARGB(255, 191, 200, 205),
-        shape: CircleBorder(),
-        elevation: 8.0,
+        backgroundColor: Colors.green,
       ),
     );
   }
 }
+

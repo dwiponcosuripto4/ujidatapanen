@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:ujidatapanen/controller/AddPanenController.dart';
 import 'package:ujidatapanen/model/loading.dart';
@@ -20,12 +22,11 @@ class _AddPanenScreenState extends State<AddPanenScreen> {
   TextEditingController noPanenController = TextEditingController();
   TextEditingController jumlahController = TextEditingController();
   TextEditingController hargaController = TextEditingController();
-  TextEditingController fotoController = TextEditingController();
   TextEditingController deskripsiController = TextEditingController();
-  TextEditingController idLoadingController = TextEditingController();
   int selectedLoadingId = 0;
   List<Loading> loadingList = []; // Untuk menyimpan daftar Loading
   DateTime selectedDate = DateTime.now();
+  File? imageFile;
 
   @override
   void initState() {
@@ -35,12 +36,14 @@ class _AddPanenScreenState extends State<AddPanenScreen> {
 
   void fetchLoadingData() async {
     try {
-      int userId = Provider.of<AuthProvider>(context, listen: false).userId ?? 0;
+      int userId =
+          Provider.of<AuthProvider>(context, listen: false).userId ?? 0;
       List<Loading> data = await ViewLoadingService().fetchLoading(userId);
       setState(() {
         loadingList = data;
         if (loadingList.isNotEmpty) {
-          selectedLoadingId = loadingList[0].id; // Inisialisasi selectedLoadingId dengan nilai pertama jika tersedia
+          selectedLoadingId = loadingList[0]
+              .id; // Inisialisasi selectedLoadingId dengan nilai pertama jika tersedia
         }
       });
     } catch (e) {
@@ -48,10 +51,47 @@ class _AddPanenScreenState extends State<AddPanenScreen> {
     }
   }
 
+  Future<void> _getImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
+  void _showImageSourceActionSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Gallery'),
+                onTap: () {
+                  _getImage(ImageSource.gallery);
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Camera'),
+                onTap: () {
+                  _getImage(ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    int userId = Provider.of<AuthProvider>(context, listen: false).userId ?? 0;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tambah Panen'),
@@ -94,13 +134,11 @@ class _AddPanenScreenState extends State<AddPanenScreen> {
                   labelStyle: TextStyle(color: Colors.white),
                 ),
               ),
-              TextFormField(
-                controller: fotoController,
-                decoration: const InputDecoration(
-                  labelText: 'Foto URL',
-                  labelStyle: TextStyle(color: Colors.white),
-                ),
+              ElevatedButton(
+                onPressed: _showImageSourceActionSheet,
+                child: const Text('Pilih Foto'),
               ),
+              if (imageFile != null) Image.file(imageFile!),
               TextFormField(
                 controller: deskripsiController,
                 decoration: const InputDecoration(
@@ -108,6 +146,7 @@ class _AddPanenScreenState extends State<AddPanenScreen> {
                   labelStyle: TextStyle(color: Colors.white),
                 ),
               ),
+              const SizedBox(height: 20),
               DropdownButtonFormField<int>(
                 decoration: const InputDecoration(
                   labelText: 'Pilih Loading',
@@ -133,17 +172,11 @@ class _AddPanenScreenState extends State<AddPanenScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              Text(
-                'ID Lahan: ${widget.idLahan}',
-                style: const TextStyle(color: Colors.white),
-              ),
-              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
                   String noPanen = noPanenController.text;
                   double jumlah = double.tryParse(jumlahController.text) ?? 0.0;
                   double harga = double.tryParse(hargaController.text) ?? 0.0;
-                  String foto = fotoController.text;
                   String deskripsi = deskripsiController.text;
 
                   Panen panen = Panen(
@@ -152,13 +185,14 @@ class _AddPanenScreenState extends State<AddPanenScreen> {
                     tanggalPanen: selectedDate,
                     jumlah: jumlah,
                     harga: harga,
-                    foto: foto,
+                    foto: imageFile != null ? imageFile!.path : '',
                     deskripsi: deskripsi,
                     idLahan: widget.idLahan,
                     idLoading: selectedLoadingId,
                   );
 
-                  bool createSuccess = await _panenController.createPanen(context, panen);
+                  bool createSuccess = await _panenController
+                      .createPanen(context, panen, imageFile: imageFile);
 
                   if (createSuccess) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -168,13 +202,15 @@ class _AddPanenScreenState extends State<AddPanenScreen> {
                         backgroundColor: Colors.blue,
                       ),
                     );
-                    Navigator.pop(context, true); // Kembali ke halaman sebelumnya
+                    Navigator.pop(
+                        context, true); // Kembali ke halaman sebelumnya
                   }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green, // Ubah warna tombol jika perlu
                   textStyle: const TextStyle(fontSize: 16),
-                  fixedSize: const Size(200, 50), // Ubah ukuran tombol jika perlu
+                  fixedSize:
+                      const Size(200, 50), // Ubah ukuran tombol jika perlu
                 ),
                 child: const Text('Simpan'),
               ),
