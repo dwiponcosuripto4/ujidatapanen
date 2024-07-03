@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:ujidatapanen/widget/Edit_Lahan_Diaolog.dart';
+import 'package:ujidatapanen/model/lahan.dart';
 import 'package:ujidatapanen/provider/AuthProvider.dart';
-import 'package:ujidatapanen/screen/lahan/AddLahanScreen.dart';
-import 'package:ujidatapanen/screen/lahan/ViewLahanDetail.dart';
-import 'package:ujidatapanen/screen/loading/ViewLoadingScreen.dart';
 import 'package:ujidatapanen/screen/auth/login_screen.dart';
+import 'package:ujidatapanen/screen/lahan/AddLahanScreen.dart';
+import 'package:ujidatapanen/screen/loading/ViewLoadingScreen.dart';
 import 'package:ujidatapanen/screen/profile/tentang_screen.dart';
 import 'package:ujidatapanen/service/lahan/DeleteLahanService.dart';
 import 'package:ujidatapanen/service/lahan/ViewLahanService.dart';
-import 'package:ujidatapanen/model/lahan.dart';
-import 'package:ujidatapanen/service/saldo/ViewSaldoService.dart'; // Tambahkan import ViewSaldoService
+import 'package:ujidatapanen/service/saldo/ViewSaldoService.dart';
+import 'package:ujidatapanen/widget/Edit_Lahan_Diaolog.dart';
+import 'package:ujidatapanen/widget/lahan_list_item.dart';
+import 'package:ujidatapanen/widget/saldo_display.dart';
+import 'package:ujidatapanen/widget/search_lahan.dart';
 
 class HomeView extends StatefulWidget {
   final int userId;
@@ -24,18 +25,17 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   late Future<List<Lahan>> _lahanFuture;
-  late Future<Map<String, dynamic>> _saldoFuture; // Future untuk data saldo
+  late Future<Map<String, dynamic>> _saldoFuture;
   String searchQuery = '';
   bool _isPendapatanVisible = true;
   bool _isTotalPanenVisible = true;
-  final LahanService _lahanService =
-      LahanService(); // Instance of LahanService for delete operation
+  final LahanService _lahanService = LahanService();
 
   @override
   void initState() {
     super.initState();
     fetchData();
-    fetchSaldo(); // Panggil fungsi untuk mengambil data saldo
+    fetchSaldo();
   }
 
   void fetchData() {
@@ -43,46 +43,20 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void fetchSaldo() {
-    _saldoFuture = ViewSaldoService()
-        .getSaldo(widget.userId); // Ambil saldo berdasarkan userId
+    _saldoFuture = ViewSaldoService().getSaldo(widget.userId);
   }
 
   void showSearchDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0), // Ubah radius border
-          ),
-          contentPadding:
-              EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0.0), // Atur padding konten
-
-          content: TextField(
-            style: TextStyle(fontSize: 16), // Ubah ukuran teks pada TextField
-            decoration: InputDecoration(
-              labelText: 'Search',
-              labelStyle: TextStyle(fontSize: 16), // Ukuran teks label
-              prefixIcon: Icon(Icons.search),
-              border: OutlineInputBorder(),
-            ),
-            onChanged: (value) {
-              setState(() {
-                searchQuery = value.toLowerCase();
-              });
-            },
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'Close',
-                style: TextStyle(fontSize: 16), // Ukuran teks tombol
-              ),
-            ),
-          ],
+        return SearchDialog(
+          searchQuery: searchQuery,
+          onChanged: (value) {
+            setState(() {
+              searchQuery = value.toLowerCase();
+            });
+          },
         );
       },
     );
@@ -95,7 +69,6 @@ class _HomeViewState extends State<HomeView> {
         fetchData();
       });
     } catch (e) {
-      // Handle error jika penghapusan gagal
       print('Failed to delete lahan: $e');
     }
   }
@@ -127,7 +100,7 @@ class _HomeViewState extends State<HomeView> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Material(
-                elevation: 20, // Menentukan nilai elevation untuk efek 3D
+                elevation: 20,
                 borderRadius: BorderRadius.circular(10),
                 color: Color(0xFF059212),
                 child: Padding(
@@ -135,120 +108,45 @@ class _HomeViewState extends State<HomeView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Bagian yang menampilkan Total Panen dan Pendapatan
-                      // Bagian yang menampilkan Total Panen dan Pendapatan
                       FutureBuilder<Map<String, dynamic>>(
-              future: _saldoFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else if (!snapshot.hasData) {
-                  return Text('Loading...');
-                } else {
-                  double totalPanen = (snapshot.data!['total_panen'] ?? 0).toDouble();
-                  double pendapatan = (snapshot.data!['pendapatan'] ?? 0).toDouble();
+                        future: _saldoFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else if (!snapshot.hasData) {
+                            return Text('Loading...');
+                          } else {
+                            double totalPanen =
+                                (snapshot.data!['total_panen'] ?? 0).toDouble();
+                            double pendapatan =
+                                (snapshot.data!['pendapatan'] ?? 0).toDouble();
 
-                  return Container(
-                    width: double.infinity,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Total Panen',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Row(
-                              children: [
-                                AnimatedOpacity(
-                                  opacity: _isTotalPanenVisible ? 1.0 : 0.0,
-                                  duration: Duration(milliseconds: 500),
-                                  child: Text(
-                                    '${totalPanen.toStringAsFixed(2)} Kg',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _isTotalPanenVisible = !_isTotalPanenVisible;
-                            });
-                          },
-                          child: Icon(
-                            _isTotalPanenVisible
-                                ? Icons.remove_red_eye_outlined
-                                : Icons.visibility_off,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Pendapatan',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Row(
-                              children: [
-                                AnimatedOpacity(
-                                  opacity: _isPendapatanVisible ? 1.0 : 0.0,
-                                  duration: Duration(milliseconds: 500),
-                                  child: Text(
-                                    'Rp ${pendapatan.toStringAsFixed(0)}',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _isPendapatanVisible = !_isPendapatanVisible;
-                            });
-                          },
-                          child: Icon(
-                            _isPendapatanVisible
-                                ? Icons.remove_red_eye_outlined
-                                : Icons.visibility_off,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-              },
-            ),
+                            return SaldoDisplay(
+                              totalPanen: totalPanen,
+                              pendapatan: pendapatan,
+                              isTotalPanenVisible: _isTotalPanenVisible,
+                              isPendapatanVisible: _isPendapatanVisible,
+                              onToggleTotalPanenVisibility: () {
+                                setState(() {
+                                  _isTotalPanenVisible =
+                                      !_isTotalPanenVisible;
+                                });
+                              },
+                              onTogglePendapatanVisibility: () {
+                                setState(() {
+                                  _isPendapatanVisible = !_isPendapatanVisible;
+                                });
+                              },
+                            );
+                          }
+                        },
+                      ),
                       Divider(
                         color: Colors.white,
                         thickness: 2,
@@ -273,7 +171,9 @@ class _HomeViewState extends State<HomeView> {
                 } else {
                   List<Lahan> lahanList = snapshot.data!;
                   List<Lahan> filteredLahanList = lahanList.where((lahan) {
-                    return lahan.namaLahan.toLowerCase().contains(searchQuery);
+                    return lahan.namaLahan
+                        .toLowerCase()
+                        .contains(searchQuery);
                   }).toList();
 
                   return Container(
@@ -283,89 +183,48 @@ class _HomeViewState extends State<HomeView> {
                       itemCount: filteredLahanList.length,
                       itemBuilder: (context, index) {
                         var lahan = filteredLahanList[index];
-                        return Container(
-                          margin:
-                              EdgeInsets.symmetric(vertical: 5, horizontal: 16),
-                          height: 80,
-                          child: Opacity(
-                            opacity: 0.8, // Atur nilai opacity sesuai keinginan
-                            child: Card(
-                              color: Colors.white
-                                  .withOpacity(0.10), // Atur warna transparan
-                              elevation:
-                                  4, // Atur nilai elevation untuk efek 3D
-                              child: ListTile(
-                                title: Text(
-                                  lahan.namaLahan,
-                                  style: TextStyle(
-                                      color:
-                                          Colors.white), // Sesuaikan warna teks
-                                ),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ViewLahanDetail(lahan: lahan),
-                                    ),
-                                  );
-                                },
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(Icons.edit),
-                                      color: Color.fromARGB(255, 248, 248, 249),
-                                      onPressed: () async {
-                                        bool? updated = await showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              EditLahanDialog(lahan: lahan),
-                                        );
-                                        if (updated != null && updated) {
-                                          setState(() {
-                                            fetchData(); // Refresh data setelah edit
-                                          });
-                                        }
+                        return LahanListItem(
+                          lahan: lahan,
+                          onEdit: () async {
+                            bool? updated = await showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  EditLahanDialog(lahan: lahan),
+                            );
+                            if (updated != null && updated) {
+                              setState(() {
+                                fetchData();
+                              });
+                            }
+                          },
+                          onDelete: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Delete Lahan'),
+                                  content: Text(
+                                      'Are you sure you want to delete ${lahan.namaLahan}?'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
                                       },
                                     ),
-                                    IconButton(
-                                      icon: Icon(Icons.delete),
-                                      color: Color.fromARGB(255, 248, 248, 249),
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text('Delete Lahan'),
-                                              content: Text(
-                                                  'Are you sure you want to delete ${lahan.namaLahan}?'),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  child: Text('Cancel'),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                                TextButton(
-                                                  child: Text('Delete'),
-                                                  onPressed: () async {
-                                                    Navigator.of(context).pop();
-                                                    await _deleteLahan(lahan
-                                                        .id); // Panggil fungsi delete
-                                                  },
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
+                                    TextButton(
+                                      child: Text('Delete'),
+                                      onPressed: () async {
+                                        Navigator.of(context).pop();
+                                        await _deleteLahan(
+                                            lahan.id); // Panggil fungsi delete
                                       },
                                     ),
                                   ],
-                                ),
-                              ),
-                            ),
-                          ),
+                                );
+                              },
+                            );
+                          },
                         );
                       },
                     ),
@@ -414,8 +273,7 @@ class _HomeViewState extends State<HomeView> {
                 },
               ),
               PopupMenuButton<String>(
-                icon: Icon(
-                    Icons.person), // Menentukan ikon yang ingin ditampilkan
+                icon: Icon(Icons.person),
                 onSelected: (value) {
                   switch (value) {
                     case 'Tentang':
@@ -493,9 +351,7 @@ class _HomeViewState extends State<HomeView> {
           }
         },
         child: Icon(Icons.add),
-        backgroundColor: Color.fromARGB(255, 191, 200, 205),
-        shape: CircleBorder(),
-        elevation: 8.0,
+        backgroundColor: Color(0xFF4CAF50),
       ),
     );
   }

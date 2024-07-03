@@ -12,7 +12,7 @@ import 'package:ujidatapanen/screen/profile/tentang_screen.dart';
 import 'package:ujidatapanen/screen/loading/AddLoadingScreen.dart';
 import 'package:ujidatapanen/service/loading/DeleteLoadingService.dart';
 import 'package:ujidatapanen/service/loading/ViewLoadingService.dart';
-import 'package:ujidatapanen/widget/search_dialog.dart';
+import 'package:ujidatapanen/widget/search_loading.dart';
 import 'package:ujidatapanen/widget/edit_dialog.dart';
 import 'package:ujidatapanen/widget/delete_dialog.dart';
 
