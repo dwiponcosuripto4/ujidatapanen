@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:ujidatapanen/controller/lahan/AddLahanController.dart';
 import 'package:ujidatapanen/model/lahan.dart';
 import 'package:ujidatapanen/provider/AuthProvider.dart';
-import 'package:ujidatapanen/screen/map_screen.dart';
 import 'package:ujidatapanen/widget/lahan_button.dart';
 import 'package:ujidatapanen/widget/lahan_form.dart';
 import 'package:ujidatapanen/widget/location_input.dart';

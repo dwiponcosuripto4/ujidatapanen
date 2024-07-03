@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:ujidatapanen/controller/EditLoadingController.dart';
 import 'package:ujidatapanen/model/loading.dart';
-import 'package:ujidatapanen/screen/map_screen.dart';
+import 'package:ujidatapanen/screen/map/map_screen.dart';
 
 class EditDialog extends StatefulWidget {
   final Loading loading;

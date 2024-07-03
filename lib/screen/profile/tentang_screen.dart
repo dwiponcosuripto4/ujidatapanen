@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ujidatapanen/widget/info_row.dart';
 
 class TentangView extends StatefulWidget {
   @override
@@ -90,48 +91,17 @@ class _TentangViewState extends State<TentangView> {
                     ),
                   ),
                   SizedBox(height: 16),
-                  buildInfoRow(Icons.account_circle, 'Username', _username),
+                  InfoRow(icon: Icons.account_circle, label: 'Username', value: _username),
                   SizedBox(height: 12),
-                  buildInfoRow(Icons.email, 'Email', _email),
+                  InfoRow(icon: Icons.email, label: 'Email', value: _email),
                   SizedBox(height: 12),
-                  buildInfoRow(
-                      Icons.date_range, 'Tanggal Bergabung', _tanggalBergabung),
+                  InfoRow(icon: Icons.date_range, label: 'Tanggal Bergabung', value: _tanggalBergabung),
                 ],
               ),
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget buildInfoRow(IconData icon, String label, String value) {
-    return Row(
-      children: [
-        Icon(icon, color: Colors.white, size: 32),
-        SizedBox(width: 12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 4),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

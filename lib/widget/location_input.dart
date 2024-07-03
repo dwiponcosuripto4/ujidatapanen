@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ujidatapanen/screen/map_screen.dart';
+import 'package:ujidatapanen/screen/map/map_screen.dart';
 
 class LocationInput extends StatelessWidget {
   final String? lokasi;
