@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ujidatapanen/controller/AddLahanController.dart';
+import 'package:ujidatapanen/controller/lahan/AddLahanController.dart';
 import 'package:ujidatapanen/model/lahan.dart';
 import 'package:ujidatapanen/provider/AuthProvider.dart';
 import 'map_screen.dart';

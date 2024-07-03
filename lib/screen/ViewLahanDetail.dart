@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ujidatapanen/model/lahan.dart';
 import 'package:ujidatapanen/model/panen.dart';
 import 'package:ujidatapanen/screen/AddPanenScreen.dart';
-import 'package:ujidatapanen/service/ViewPanenService.dart';
+import 'package:ujidatapanen/service/panen/ViewPanenService.dart';
 
 class ViewLahanDetail extends StatefulWidget {
   final Lahan lahan;

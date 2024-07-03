@@ -1,16 +1,18 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../model/loading.dart';
+import '../../model/user.dart';
 
-class LoadingService {
-  Future<bool> createLoading(Loading loading) async {
-    var url = Uri.parse('http://localhost/tani/add_loading.php');
+class AuthService {
+  Future<bool> registerUser(User user) async {
+    var url = Uri.parse('http://192.168.0.190/tani/register.php');
     var response = await http.post(url, body: {
-      'nama_loading': loading.namaLoading,
-      'pemilik': loading.pemilik,
-      'alamat': loading.alamat,
-      'lokasi': loading.lokasi,
-      'user_id': loading.userId.toString(),
+      'id': user.id.toString(),
+      'username': user.username,
+      'alamat': user.alamat,
+      'no_telp': user.no_telp.toString(),
+      'email': user.email,
+      'password': user.password,
+      'tanggal_bergabung': user.tanggalBergabung ?? '',
     });
 
     if (response.statusCode == 200) {

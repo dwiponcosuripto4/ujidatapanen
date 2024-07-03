@@ -6,8 +6,8 @@ import 'package:ujidatapanen/provider/AuthProvider.dart';
 import 'package:ujidatapanen/screen/login_screen.dart';
 import 'package:ujidatapanen/screen/map_screen.dart';
 import 'package:ujidatapanen/screen/tentang_screen.dart';
-import 'package:ujidatapanen/service/DeleteLoadingService.dart';
-import 'package:ujidatapanen/service/ViewLoadingService.dart';
+import 'package:ujidatapanen/service/loading/DeleteLoadingService.dart';
+import 'package:ujidatapanen/service/loading/ViewLoadingService.dart';
 import 'package:ujidatapanen/screen/home.dart';
 import 'package:ujidatapanen/screen/AddLoadingScreen.dart';
 import 'package:ujidatapanen/screen/ViewLoadingDetail.dart'; // Pastikan import ViewLoadingDetail.dart

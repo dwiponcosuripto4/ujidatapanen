@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../model/lahan.dart';
+import '../../model/lahan.dart';
 
 class LahanService {
   Future<bool> createLahan(Lahan lahan) async {
-    var url = Uri.parse('http://192.168.0.109/tani/add_lahan.php');
+    var url = Uri.parse('http://192.168.0.190/tani/add_lahan.php');
     var response = await http.post(url, body: {
       'nama_lahan': lahan.namaLahan,
       'lokasi': lahan.lokasi,

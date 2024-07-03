@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ujidatapanen/controller/AddSaldoController.dart';
 import 'package:ujidatapanen/model/loading.dart';
 import 'package:ujidatapanen/model/panen.dart';
-import 'package:ujidatapanen/service/ViewPanenServicebyLoading.dart';
+import 'package:ujidatapanen/service/panen/ViewPanenServicebyLoading.dart';
 
 class ViewLoadingDetail extends StatefulWidget {
   final Loading loading;
@@ -182,12 +182,17 @@ class _ViewLoadingDetailState extends State<ViewLoadingDetail> {
 
   Widget buildInfoRow(IconData icon, String label, String value) {
     return Row(
+      crossAxisAlignment:
+          CrossAxisAlignment.start,
       children: [
         Icon(icon, color: Colors.white),
         SizedBox(width: 8),
-        Text(
-          '$label: $value',
-          style: TextStyle(fontSize: 16, color: Colors.white),
+        Expanded(
+          // Expanded to make sure the text wraps within the available space
+          child: Text(
+            '$label: $value',
+            style: TextStyle(fontSize: 16, color: Colors.white),
+          ),
         ),
       ],
     );

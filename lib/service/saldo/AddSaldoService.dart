@@ -1,18 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../model/user.dart';
 
-class AuthService {
-  Future<bool> registerUser(User user) async {
-    var url = Uri.parse('http://192.168.0.109/tani/register.php');
+class AddSaldoService {
+  Future<bool> addSaldo(int idLoading, int idUser) async {
+    var url = Uri.parse('http://192.168.0.190/tani/saldo.php');
     var response = await http.post(url, body: {
-      'id': user.id.toString(),
-      'username': user.username,
-      'alamat': user.alamat,
-      'no_telp': user.no_telp.toString(),
-      'email': user.email,
-      'password': user.password,
-      'tanggal_bergabung': user.tanggalBergabung ?? '',
+      'id_loading': idLoading.toString(),
+      'id_user': idUser.toString(),
     });
 
     if (response.statusCode == 200) {

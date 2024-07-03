@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ujidatapanen/model/lahan.dart';
-import 'package:ujidatapanen/service/AddLahanService.dart';
+import 'package:ujidatapanen/service/lahan/AddLahanService.dart';
 
 class LahanController {
   final LahanService _lahanService = LahanService();

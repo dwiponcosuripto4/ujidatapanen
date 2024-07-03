@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:ujidatapanen/controller/Edit_Lahan_Diaolog.dart';
+import 'package:ujidatapanen/screen/widget/Edit_Lahan_Diaolog.dart';
 import 'package:ujidatapanen/provider/AuthProvider.dart';
 import 'package:ujidatapanen/screen/AddLahanScreen.dart';
 import 'package:ujidatapanen/screen/ViewLahanDetail.dart';
 import 'package:ujidatapanen/screen/ViewLoadingScreen.dart';
 import 'package:ujidatapanen/screen/login_screen.dart';
 import 'package:ujidatapanen/screen/tentang_screen.dart';
-import 'package:ujidatapanen/service/ViewLahanService.dart';
+import 'package:ujidatapanen/service/lahan/DeleteLahanService.dart';
+import 'package:ujidatapanen/service/lahan/ViewLahanService.dart';
 import 'package:ujidatapanen/model/lahan.dart';
-import 'package:ujidatapanen/service/deleteLahanService.dart';
-import 'package:ujidatapanen/service/ViewSaldoService.dart'; // Tambahkan import ViewSaldoService
+import 'package:ujidatapanen/service/saldo/ViewSaldoService.dart'; // Tambahkan import ViewSaldoService
 
 class HomeView extends StatefulWidget {
   final int userId;

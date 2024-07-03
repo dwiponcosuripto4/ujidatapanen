@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../model/loading.dart';
+import '../../model/loading.dart';
 
-class EditLoadingService {
-  Future<bool> updateLoading(Loading loading) async {
-    var url = Uri.parse('http://192.168.0.109/tani/edit_loading.php');
+class LoadingService {
+  Future<bool> createLoading(Loading loading) async {
+    var url = Uri.parse('http://192.168.0.190/tani/add_loading.php');
     var response = await http.post(url, body: {
-      'id': loading.id.toString(),
       'nama_loading': loading.namaLoading,
       'pemilik': loading.pemilik,
       'alamat': loading.alamat,

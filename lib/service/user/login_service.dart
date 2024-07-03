@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginService {
   Future<int?> login(String email, String password) async {
-    var url = Uri.parse('http://192.168.0.109/tani/login.php');
+    var url = Uri.parse('http://192.168.0.190/tani/login.php');
     var response = await http.post(url, body: {
       'action': 'login',
       'email': email,

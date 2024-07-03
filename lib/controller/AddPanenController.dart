@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ujidatapanen/model/panen.dart';
-import 'package:ujidatapanen/service/AddPanenService.dart';
+import 'package:ujidatapanen/service/panen/AddPanenService.dart';
 
 class PanenController {
   final PanenService _panenService = PanenService();

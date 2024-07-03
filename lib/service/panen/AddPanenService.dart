@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
-import '../model/panen.dart';
+import '../../model/panen.dart';
 
 class PanenService {
-  final String baseUrl = 'http://192.168.0.109/tani/';
+  final String baseUrl = 'http://192.168.0.190/tani/';
   final String endpoint = 'add_panen.php';
 
   Uri getUri(String path) {
