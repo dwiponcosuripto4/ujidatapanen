@@ -1,9 +1,11 @@
+// add_loading_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ujidatapanen/controller/AddLoadingController.dart';
 import 'package:ujidatapanen/model/loading.dart';
 import 'package:ujidatapanen/provider/AuthProvider.dart';
-import 'package:ujidatapanen/screen/map_screen.dart';
+import 'package:ujidatapanen/screen/widget/LoadingForm.dart';
+import 'package:ujidatapanen/screen/widget/LocationPicker.dart';
 
 class AddLoadingScreen extends StatefulWidget {
   const AddLoadingScreen({Key? key}) : super(key: key);
@@ -14,9 +16,9 @@ class AddLoadingScreen extends StatefulWidget {
 
 class _AddLoadingScreenState extends State<AddLoadingScreen> {
   final LoadingController _loadingController = LoadingController();
-  TextEditingController namaLoadingController = TextEditingController();
-  TextEditingController pemilikController = TextEditingController();
-  TextEditingController alamatController = TextEditingController();
+  final TextEditingController namaLoadingController = TextEditingController();
+  final TextEditingController pemilikController = TextEditingController();
+  final TextEditingController alamatController = TextEditingController();
   String? _lokasi;
 
   @override
@@ -25,8 +27,8 @@ class _AddLoadingScreenState extends State<AddLoadingScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF1A4D2E),
-        title: Text(
+        backgroundColor: const Color(0xFF1A4D2E),
+        title: const Text(
           'Tambah Loading',
           style: TextStyle(
             fontSize: 20.0,
@@ -35,82 +37,34 @@ class _AddLoadingScreenState extends State<AddLoadingScreen> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           color: Colors.white,
           onPressed: () {
             Navigator.pop(context); // Navigasi kembali normal
           },
         ),
       ),
-      backgroundColor: Color(0xFF1A4D2E),
+      backgroundColor: const Color(0xFF1A4D2E),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextFormField(
-              controller: namaLoadingController,
-              style: TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                labelText: 'Nama Loading',
-                labelStyle: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
+            LoadingForm(
+              namaLoadingController: namaLoadingController,
+              pemilikController: pemilikController,
+              alamatController: alamatController,
             ),
-            TextFormField(
-              controller: pemilikController,
-              style: TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                labelText: 'Pemilik',
-                labelStyle: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
+            const SizedBox(height: 20),
+            LocationPicker(
+              onLocationSelected: (selectedLocation) {
+                setState(() {
+                  _lokasi = selectedLocation;
+                });
+              },
+              selectedLocation: _lokasi,
             ),
-            TextFormField(
-              controller: alamatController,
-              style: TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                labelText: 'Alamat',
-                labelStyle: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    _lokasi ?? 'Lokasi belum dipilih',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.map, color: Colors.white),
-                  onPressed: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MapScreen(
-                          onLocationSelected: (selectedLocation) {
-                            setState(() {
-                              _lokasi = selectedLocation;
-                            });
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
                 String namaLoading = namaLoadingController.text;
@@ -120,7 +74,7 @@ class _AddLoadingScreenState extends State<AddLoadingScreen> {
 
                 if (lokasi.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text('Lokasi harus dipilih'),
                       backgroundColor: Colors.red,
                     ),
@@ -146,8 +100,7 @@ class _AddLoadingScreenState extends State<AddLoadingScreen> {
                       backgroundColor: Colors.blue,
                     ),
                   );
-                  Navigator.pop(context,
-                      true); // Kembali ke ViewLoadingScreen dengan nilai true
+                  Navigator.pop(context, true); // Kembali ke ViewLoadingScreen dengan nilai true
                 }
               },
               child: const Text('Tambah Loading'),
