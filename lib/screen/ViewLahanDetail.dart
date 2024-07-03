@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ujidatapanen/model/lahan.dart';
 import 'package:ujidatapanen/model/panen.dart';
 import 'package:ujidatapanen/screen/AddPanenScreen.dart';
+import 'package:ujidatapanen/screen/widget/DetailLahan/info_row.dart';
+import 'package:ujidatapanen/screen/widget/DetailLahan/panen_list.dart';
 import 'package:ujidatapanen/service/panen/ViewPanenService.dart';
 
 class ViewLahanDetail extends StatefulWidget {
@@ -104,11 +106,17 @@ class _ViewLahanDetailState extends State<ViewLahanDetail> with RouteAware {
                         ),
                       ),
                       SizedBox(height: 16),
-                      buildInfoRow(Icons.format_size, 'Luas Lahan',
-                          '${widget.lahan.luas} Ha'),
+                      InfoRow(
+                        icon: Icons.format_size,
+                        label: 'Luas Lahan',
+                        value: '${widget.lahan.luas} Ha',
+                      ),
                       SizedBox(height: 12),
-                      buildInfoRow(
-                          Icons.location_on, 'Lokasi', widget.lahan.lokasi),
+                      InfoRow(
+                        icon: Icons.location_on,
+                        label: 'Lokasi',
+                        value: widget.lahan.lokasi,
+                      ),
                     ],
                   ),
                 ),
@@ -161,50 +169,13 @@ class _ViewLahanDetailState extends State<ViewLahanDetail> with RouteAware {
                   return Center(child: Text('No data available'));
                 } else {
                   List<Panen> panenList = snapshot.data!;
-                  return ListView.builder(
-                    itemCount: panenList.length,
-                    itemBuilder: (context, index) {
-                      var panen = panenList[index];
-                      return Card(
-                        child: ListTile(
-                          title: Text(panen.noPanen),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Jumlah: ${panen.jumlah} Kg'),
-                              Text('Harga: ${panen.harga}'),
-                              Text(
-                                  'Tanggal Panen: ${panen.tanggalPanen.toIso8601String()}'),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  );
+                  return PanenList(panenList: panenList);
                 }
               },
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget buildInfoRow(IconData icon, String label, String value) {
-    return Row(
-      crossAxisAlignment:
-          CrossAxisAlignment.start, // Make sure content stacks vertically
-      children: [
-        Icon(icon, color: Colors.white),
-        SizedBox(width: 8),
-        Expanded(
-          // Expanded to make sure the text wraps within the available space
-          child: Text(
-            '$label: $value',
-            style: TextStyle(fontSize: 16, color: Colors.white),
-          ),
-        ),
-      ],
     );
   }
 }
