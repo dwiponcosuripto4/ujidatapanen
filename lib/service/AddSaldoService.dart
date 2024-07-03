@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class AddSaldoService {
   Future<bool> addSaldo(int idLoading, int idUser) async {
-    var url = Uri.parse('http://192.168.0.193/tani/saldo.php');
+    var url = Uri.parse('http://192.168.0.109/tani/saldo.php');
     var response = await http.post(url, body: {
       'id_loading': idLoading.toString(),
       'id_user': idUser.toString(),

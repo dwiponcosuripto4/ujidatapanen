@@ -4,7 +4,7 @@ import '../model/lahan.dart';
 
 class LahanService {
   Future<bool> createLahan(Lahan lahan) async {
-    var url = Uri.parse('http://192.168.0.193/tani/lahan.php');
+    var url = Uri.parse('http://192.168.0.109/tani/add_lahan.php');
     var response = await http.post(url, body: {
       'nama_lahan': lahan.namaLahan,
       'lokasi': lahan.lokasi,
