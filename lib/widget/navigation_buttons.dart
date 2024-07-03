@@ -1,6 +1,6 @@
 // widget/navigation_buttons.dart
 import 'package:flutter/material.dart';
-import 'package:ujidatapanen/screen/login_screen.dart';
+import 'package:ujidatapanen/screen/auth/login_screen.dart';
 
 class NavigationButtons extends StatefulWidget {
   final Function(BuildContext context) navigateToLogin;

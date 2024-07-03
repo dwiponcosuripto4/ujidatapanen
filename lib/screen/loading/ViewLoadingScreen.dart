@@ -6,7 +6,7 @@ import 'package:ujidatapanen/model/loading.dart';
 import 'package:ujidatapanen/provider/AuthProvider.dart';
 import 'package:ujidatapanen/screen/loading/ViewLoadingDetail.dart';
 import 'package:ujidatapanen/screen/home.dart';
-import 'package:ujidatapanen/screen/login_screen.dart';
+import 'package:ujidatapanen/screen/auth/login_screen.dart';
 import 'package:ujidatapanen/screen/map/map_screen.dart';
 import 'package:ujidatapanen/screen/profile/tentang_screen.dart';
 import 'package:ujidatapanen/screen/loading/AddLoadingScreen.dart';

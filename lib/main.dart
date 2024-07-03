@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ujidatapanen/provider/AuthProvider.dart';
-import 'package:ujidatapanen/screen/login_screen.dart';
+import 'package:ujidatapanen/screen/auth/login_screen.dart';
 
 void main() {
   runApp(

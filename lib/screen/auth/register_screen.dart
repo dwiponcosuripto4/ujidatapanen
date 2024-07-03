@@ -1,7 +1,7 @@
 // register_page.dart
 import 'package:flutter/material.dart';
 import 'package:ujidatapanen/controller/user/register_controller.dart';
-import 'package:ujidatapanen/screen/login_screen.dart';
+import 'package:ujidatapanen/screen/auth/login_screen.dart';
 import 'package:ujidatapanen/widget/app_bar_wave.dart';
 import 'package:ujidatapanen/widget/register_form.dart';
 import 'package:ujidatapanen/widget/navigation_buttons.dart';

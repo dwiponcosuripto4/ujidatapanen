@@ -6,7 +6,7 @@ import 'package:ujidatapanen/provider/AuthProvider.dart';
 import 'package:ujidatapanen/screen/lahan/AddLahanScreen.dart';
 import 'package:ujidatapanen/screen/lahan/ViewLahanDetail.dart';
 import 'package:ujidatapanen/screen/loading/ViewLoadingScreen.dart';
-import 'package:ujidatapanen/screen/login_screen.dart';
+import 'package:ujidatapanen/screen/auth/login_screen.dart';
 import 'package:ujidatapanen/screen/profile/tentang_screen.dart';
 import 'package:ujidatapanen/service/lahan/DeleteLahanService.dart';
 import 'package:ujidatapanen/service/lahan/ViewLahanService.dart';

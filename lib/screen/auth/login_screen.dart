@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ujidatapanen/controller/user/login_controller.dart';
-import 'package:ujidatapanen/screen/register_screen.dart';
+import 'package:ujidatapanen/screen/auth/register_screen.dart';
 import 'package:ujidatapanen/screen/home.dart';
+import 'package:ujidatapanen/widget/email_input_field.dart';
+import 'package:ujidatapanen/widget/password_input_field.dart';
+import 'package:ujidatapanen/widget/wave_clipper.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -184,47 +187,9 @@ class _LoginPageState extends State<LoginPage> {
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 20),
-                TextFormField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    prefixIcon: Icon(Icons.email),
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value!)) {
-                      return 'Please enter a valid email';
-                    }
-                    return null;
-                  },
-                ),
+                EmailInputField(controller: emailController),
                 const SizedBox(height: 20),
-                TextFormField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    prefixIcon: Icon(Icons.lock),
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  },
-                ),
+                PasswordInputField(controller: passwordController),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
@@ -270,30 +235,5 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-}
-
-class WaveClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-    path.lineTo(0, size.height - 50);
-    var firstControlPoint = Offset(size.width / 4, size.height);
-    var firstEndPoint = Offset(size.width / 2, size.height - 50);
-    var secondControlPoint = Offset(size.width * 3 / 4, size.height - 100);
-    var secondEndPoint = Offset(size.width, size.height - 10);
-
-    path.quadraticBezierTo(firstControlPoint.dx, firstControlPoint.dy,
-        firstEndPoint.dx, firstEndPoint.dy);
-    path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
-        secondEndPoint.dx, secondEndPoint.dy);
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return false;
   }
 }

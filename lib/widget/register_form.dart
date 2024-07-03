@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:ujidatapanen/controller/user/register_controller.dart';
 import 'package:ujidatapanen/model/user.dart';
-import 'package:ujidatapanen/screen/login_screen.dart';
+import 'package:ujidatapanen/screen/auth/login_screen.dart';
 
 class RegisterForm extends StatefulWidget {
   final RegisterController registerController;
