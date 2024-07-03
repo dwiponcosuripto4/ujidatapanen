@@ -1,3 +1,4 @@
+// view_loading_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ujidatapanen/controller/EditLoadingController.dart';
@@ -11,6 +12,9 @@ import 'package:ujidatapanen/screen/tentang_screen.dart';
 import 'package:ujidatapanen/screen/AddLoadingScreen.dart';
 import 'package:ujidatapanen/service/loading/DeleteLoadingService.dart';
 import 'package:ujidatapanen/service/loading/ViewLoadingService.dart';
+import 'package:ujidatapanen/widget/search_dialog.dart';
+import 'package:ujidatapanen/widget/edit_dialog.dart';
+import 'package:ujidatapanen/widget/delete_dialog.dart';
 
 class ViewLoadingScreen extends StatefulWidget {
   @override
@@ -37,136 +41,36 @@ class _ViewLoadingScreenState extends State<ViewLoadingScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Search'),
-          content: TextField(
-            decoration: InputDecoration(
-              labelText: 'Search',
-              prefixIcon: Icon(Icons.search),
-              border: OutlineInputBorder(),
-            ),
-            onChanged: (value) {
-              setState(() {
-                searchQuery = value.toLowerCase();
-              });
-            },
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Close'),
-            ),
-          ],
+        return SearchDialog(
+          onSearch: (value) {
+            setState(() {
+              searchQuery = value.toLowerCase();
+            });
+          },
         );
       },
     );
   }
 
   void showEditDialog(BuildContext context, Loading loading) {
-    TextEditingController namaLoadingController =
-        TextEditingController(text: loading.namaLoading);
-    TextEditingController pemilikController =
-        TextEditingController(text: loading.pemilik);
-    TextEditingController alamatController =
-        TextEditingController(text: loading.alamat);
-    String? lokasi = loading.lokasi;
-    final EditLoadingController _editLoadingController =
-        EditLoadingController();
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Edit Loading'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: namaLoadingController,
-                decoration: const InputDecoration(labelText: 'Nama Loading'),
-              ),
-              TextFormField(
-                controller: pemilikController,
-                decoration: const InputDecoration(labelText: 'Pemilik'),
-              ),
-              TextFormField(
-                controller: alamatController,
-                decoration: const InputDecoration(labelText: 'Alamat'),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(lokasi ?? 'Lokasi belum dipilih'),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.map),
-                    onPressed: () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MapScreen(
-                            onLocationSelected: (selectedLocation) {
-                              setState(() {
-                                lokasi = selectedLocation;
-                              });
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                String namaLoading = namaLoadingController.text;
-                String pemilik = pemilikController.text;
-                String alamat = alamatController.text;
-                lokasi = lokasi ?? '';
+        return EditDialog(
+          loading: loading,
+          onUpdate: fetchData,
+        );
+      },
+    );
+  }
 
-                if (lokasi!.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Lokasi harus dipilih'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                  return;
-                }
-
-                Loading updatedLoading = Loading(
-                  id: loading.id,
-                  namaLoading: namaLoading,
-                  pemilik: pemilik,
-                  alamat: alamat,
-                  lokasi: lokasi!,
-                  userId: loading.userId,
-                );
-
-                bool updateSuccess = await _editLoadingController.updateLoading(
-                    context, updatedLoading);
-                if (updateSuccess) {
-                  setState(() {
-                    fetchData();
-                  });
-                  Navigator.of(context).pop();
-                }
-              },
-              child: Text('Simpan'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Batal'),
-            ),
-          ],
+  void showDeleteDialog(BuildContext context, Loading loading) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DeleteDialog(
+          namaLoading: loading.namaLoading,
+          onDelete: () => deleteLoading(context, loading.id),
         );
       },
     );
@@ -295,32 +199,7 @@ class _ViewLoadingScreenState extends State<ViewLoadingScreen> {
                             icon: Icon(Icons.delete),
                             color: Color.fromARGB(255, 248, 248, 249),
                             onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text('Delete Loading'),
-                                    content: Text(
-                                      'Are you sure you want to delete ${loading.namaLoading}?',
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('Cancel'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          deleteLoading(context, loading.id);
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('Delete'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
+                              showDeleteDialog(context, loading);
                             },
                           ),
                         ],

@@ -4,9 +4,9 @@ import 'package:ujidatapanen/controller/lahan/AddLahanController.dart';
 import 'package:ujidatapanen/model/lahan.dart';
 import 'package:ujidatapanen/provider/AuthProvider.dart';
 import 'package:ujidatapanen/screen/map_screen.dart';
-import 'package:ujidatapanen/screen/widget/lahan_button.dart';
-import 'package:ujidatapanen/screen/widget/lahan_form.dart';
-import 'package:ujidatapanen/screen/widget/location_input.dart';
+import 'package:ujidatapanen/widget/lahan_button.dart';
+import 'package:ujidatapanen/widget/lahan_form.dart';
+import 'package:ujidatapanen/widget/location_input.dart';
 
 class LahanScreen extends StatefulWidget {
   const LahanScreen({Key? key}) : super(key: key);

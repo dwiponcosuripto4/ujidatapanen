@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:ujidatapanen/screen/widget/Edit_Lahan_Diaolog.dart';
+import 'package:ujidatapanen/widget/Edit_Lahan_Diaolog.dart';
 import 'package:ujidatapanen/provider/AuthProvider.dart';
 import 'package:ujidatapanen/screen/AddLahanScreen.dart';
 import 'package:ujidatapanen/screen/ViewLahanDetail.dart';

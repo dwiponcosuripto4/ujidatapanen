@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ujidatapanen/controller/AddSaldoController.dart';
 import 'package:ujidatapanen/model/loading.dart';
 import 'package:ujidatapanen/model/panen.dart';
-import 'package:ujidatapanen/screen/widget/info_row.dart';
-import 'package:ujidatapanen/screen/widget/panen_list.dart';
+import 'package:ujidatapanen/widget/info_row.dart';
+import 'package:ujidatapanen/widget/panen_list.dart';
 import 'package:ujidatapanen/service/panen/ViewPanenServicebyLoading.dart';
 
 class ViewLoadingDetail extends StatefulWidget {

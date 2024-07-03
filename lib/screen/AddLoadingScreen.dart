@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:ujidatapanen/controller/AddLoadingController.dart';
 import 'package:ujidatapanen/model/loading.dart';
 import 'package:ujidatapanen/provider/AuthProvider.dart';
-import 'package:ujidatapanen/screen/widget/LoadingForm.dart';
-import 'package:ujidatapanen/screen/widget/LocationPicker.dart';
+import 'package:ujidatapanen/widget/LoadingForm.dart';
+import 'package:ujidatapanen/widget/LocationPicker.dart';
 
 class AddLoadingScreen extends StatefulWidget {
   const AddLoadingScreen({Key? key}) : super(key: key);
