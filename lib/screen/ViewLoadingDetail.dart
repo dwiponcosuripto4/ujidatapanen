@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ujidatapanen/controller/AddSaldoController.dart';
 import 'package:ujidatapanen/model/loading.dart';
 import 'package:ujidatapanen/model/panen.dart';
+import 'package:ujidatapanen/screen/widget/info_row.dart';
+import 'package:ujidatapanen/screen/widget/panen_list.dart';
 import 'package:ujidatapanen/service/panen/ViewPanenServicebyLoading.dart';
 
 class ViewLoadingDetail extends StatefulWidget {
@@ -39,8 +41,7 @@ class _ViewLoadingDetailState extends State<ViewLoadingDetail> {
       if (success) {
         _loadPanenData();
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Panen berhasil dijual dan saldo ditambahkan')),
+          SnackBar(content: Text('Panen berhasil dijual dan saldo ditambahkan')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -60,15 +61,13 @@ class _ViewLoadingDetailState extends State<ViewLoadingDetail> {
       appBar: AppBar(
         title: Text(
           'Detail Loading - ${widget.loading.namaLoading}',
-          style: TextStyle(
-            color: Colors.white, // Atur warna teks menjadi putih
-          ),
+          style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           color: Colors.white,
           onPressed: () {
-            Navigator.pop(context); // Navigasi kembali normal
+            Navigator.pop(context);
           },
         ),
         backgroundColor: Color(0xFF1A4D2E),
@@ -112,22 +111,22 @@ class _ViewLoadingDetailState extends State<ViewLoadingDetail> {
                         ),
                       ),
                       SizedBox(height: 16),
-                      buildInfoRow(
-                        Icons.person,
-                        'Pemilik',
-                        widget.loading.pemilik,
+                      InfoRow(
+                        icon: Icons.person,
+                        label: 'Pemilik',
+                        value: widget.loading.pemilik,
                       ),
                       SizedBox(height: 12),
-                      buildInfoRow(
-                        Icons.location_on,
-                        'Alamat',
-                        widget.loading.alamat,
+                      InfoRow(
+                        icon: Icons.location_on,
+                        label: 'Alamat',
+                        value: widget.loading.alamat,
                       ),
                       SizedBox(height: 12),
-                      buildInfoRow(
-                        Icons.location_on,
-                        'Lokasi',
-                        widget.loading.lokasi,
+                      InfoRow(
+                        icon: Icons.location_on,
+                        label: 'Lokasi',
+                        value: widget.loading.lokasi,
                       ),
                     ],
                   ),
@@ -157,27 +156,7 @@ class _ViewLoadingDetailState extends State<ViewLoadingDetail> {
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return Center(child: Text('No data available'));
                 } else {
-                  List<Panen> panenList = snapshot.data!;
-                  return ListView.builder(
-                    itemCount: panenList.length,
-                    itemBuilder: (context, index) {
-                      var panen = panenList[index];
-                      return Card(
-                        child: ListTile(
-                          title: Text(panen.noPanen),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Jumlah: ${panen.jumlah} Kg'),
-                              Text('Harga: ${panen.harga}'),
-                              Text(
-                                  'Tanggal Panen: ${panen.tanggalPanen.toIso8601String()}'),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  );
+                  return PanenList(panenList: snapshot.data!);
                 }
               },
             ),
@@ -198,24 +177,6 @@ class _ViewLoadingDetailState extends State<ViewLoadingDetail> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget buildInfoRow(IconData icon, String label, String value) {
-    return Row(
-      crossAxisAlignment:
-          CrossAxisAlignment.start, // Make sure content stacks vertically
-      children: [
-        Icon(icon, color: Colors.white),
-        SizedBox(width: 8),
-        Expanded(
-          // Expanded to make sure the text wraps within the available space
-          child: Text(
-            '$label: $value',
-            style: TextStyle(fontSize: 16, color: Colors.white),
-          ),
-        ),
-      ],
     );
   }
 }
