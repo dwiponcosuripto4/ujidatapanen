@@ -15,16 +15,7 @@ class LocationInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: Text(
-            lokasi ?? 'Lokasi belum dipilih',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
+        
         IconButton(
           icon: const Icon(Icons.map, color: Colors.white),
           onPressed: () async {

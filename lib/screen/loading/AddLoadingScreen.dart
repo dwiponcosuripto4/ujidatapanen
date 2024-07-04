@@ -5,7 +5,7 @@ import 'package:ujidatapanen/controller/AddLoadingController.dart';
 import 'package:ujidatapanen/model/loading.dart';
 import 'package:ujidatapanen/provider/AuthProvider.dart';
 import 'package:ujidatapanen/widget/LoadingForm.dart';
-import 'package:ujidatapanen/widget/LocationPicker.dart';
+import 'package:ujidatapanen/widget/location_input.dart';
 
 class AddLoadingScreen extends StatefulWidget {
   const AddLoadingScreen({Key? key}) : super(key: key);
@@ -19,6 +19,7 @@ class _AddLoadingScreenState extends State<AddLoadingScreen> {
   final TextEditingController namaLoadingController = TextEditingController();
   final TextEditingController pemilikController = TextEditingController();
   final TextEditingController alamatController = TextEditingController();
+  final TextEditingController lokasiController = TextEditingController();
   String? _lokasi;
 
   @override
@@ -54,15 +55,17 @@ class _AddLoadingScreenState extends State<AddLoadingScreen> {
               namaLoadingController: namaLoadingController,
               pemilikController: pemilikController,
               alamatController: alamatController,
+              lokasiController: lokasiController,
             ),
             const SizedBox(height: 20),
-            LocationPicker(
+            LocationInput(
+              lokasi: _lokasi,
               onLocationSelected: (selectedLocation) {
                 setState(() {
                   _lokasi = selectedLocation;
+                  lokasiController.text = selectedLocation;
                 });
               },
-              selectedLocation: _lokasi,
             ),
             const SizedBox(height: 20),
             ElevatedButton(

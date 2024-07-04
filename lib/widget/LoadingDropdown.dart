@@ -15,26 +15,31 @@ class LoadingDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<int>(
-      style: TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        labelText: 'Pilih Loading',
-        labelStyle: TextStyle(color: Colors.white),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        canvasColor: Color(0xFF1A4D2E),
       ),
-      value: selectedLoadingId,
-      items: loadingList.map((loading) {
-        return DropdownMenuItem<int>(
-          value: loading.id,
-          child: Text(loading.namaLoading),
-        );
-      }).toList(),
-      onChanged: onChanged,
-      validator: (value) {
-        if (value == null || value == 0) {
-          return 'Pilih Loading';
-        }
-        return null;
-      },
+      child: DropdownButtonFormField<int>(
+        style: TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+          labelText: 'Pilih Loading',
+          labelStyle: TextStyle(color: Colors.white),
+        ),
+        value: selectedLoadingId,
+        items: loadingList.map((loading) {
+          return DropdownMenuItem<int>(
+            value: loading.id,
+            child: Text(loading.namaLoading),
+          );
+        }).toList(),
+        onChanged: onChanged,
+        validator: (value) {
+          if (value == null || value == 0) {
+            return 'Pilih Loading';
+          }
+          return null;
+        },
+      ),
     );
   }
 }

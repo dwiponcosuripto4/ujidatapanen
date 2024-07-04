@@ -89,6 +89,12 @@ class _EditDialogState extends State<EditDialog> {
       ),
       actions: [
         TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('Batal'),
+        ),
+        TextButton(
           onPressed: () async {
             String namaLoading = namaLoadingController.text;
             String pemilik = pemilikController.text;
@@ -123,12 +129,7 @@ class _EditDialogState extends State<EditDialog> {
           },
           child: Text('Simpan'),
         ),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text('Batal'),
-        ),
+        
       ],
     );
   }

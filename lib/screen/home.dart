@@ -195,7 +195,7 @@ class _HomeViewState extends State<HomeView> {
                               setState(() {
                                 fetchData();
                               });
-                            }
+                            } 
                           },
                           onDelete: () {
                             showDialog(
@@ -351,7 +351,9 @@ class _HomeViewState extends State<HomeView> {
           }
         },
         child: Icon(Icons.add),
-        backgroundColor: Color(0xFF4CAF50),
+        backgroundColor: Color.fromARGB(255, 191, 200, 205),
+        shape: CircleBorder(),
+        elevation: 8.0,
       ),
     );
   }

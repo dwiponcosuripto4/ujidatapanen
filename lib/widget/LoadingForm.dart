@@ -5,12 +5,14 @@ class LoadingForm extends StatelessWidget {
   final TextEditingController namaLoadingController;
   final TextEditingController pemilikController;
   final TextEditingController alamatController;
+  final TextEditingController lokasiController;
 
   const LoadingForm({
     Key? key,
     required this.namaLoadingController,
     required this.pemilikController,
     required this.alamatController,
+    required this.lokasiController,
   }) : super(key: key);
 
   @override
@@ -42,6 +44,16 @@ class LoadingForm extends StatelessWidget {
           style: const TextStyle(color: Colors.white),
           decoration: const InputDecoration(
             labelText: 'Alamat',
+            labelStyle: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+        TextFormField(
+          controller: lokasiController,
+          style: const TextStyle(color: Colors.white),
+          decoration: const InputDecoration(
+            labelText: 'Lokasi',
             labelStyle: TextStyle(
               color: Colors.white,
             ),

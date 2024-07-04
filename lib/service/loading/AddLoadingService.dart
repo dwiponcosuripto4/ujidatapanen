@@ -4,7 +4,7 @@ import '../../model/loading.dart';
 
 class LoadingService {
   Future<bool> createLoading(Loading loading) async {
-    var url = Uri.parse('http://192.168.0.190/tani/add_loading.php');
+    var url = Uri.parse('http://192.168.98.93/tani/add_loading.php');
     var response = await http.post(url, body: {
       'nama_loading': loading.namaLoading,
       'pemilik': loading.pemilik,

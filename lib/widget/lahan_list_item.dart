@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:ujidatapanen/model/lahan.dart';
+import 'package:ujidatapanen/screen/lahan/ViewLahanDetail.dart';
 
 class LahanListItem extends StatelessWidget {
   final Lahan lahan;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
-  LahanListItem({required this.lahan, required this.onEdit, required this.onDelete});
+  LahanListItem(
+      {required this.lahan, required this.onEdit, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,12 @@ class LahanListItem extends StatelessWidget {
               style: TextStyle(color: Colors.white),
             ),
             onTap: () {
-              // Navigate to detail screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ViewLahanDetail(lahan: lahan),
+                ),
+              );
             },
             trailing: Row(
               mainAxisSize: MainAxisSize.min,

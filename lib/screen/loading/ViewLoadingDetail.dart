@@ -41,11 +41,11 @@ class _ViewLoadingDetailState extends State<ViewLoadingDetail> {
       if (success) {
         _loadPanenData();
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Panen berhasil dijual dan saldo ditambahkan')),
+          SnackBar(content: Text('Gagal menjual panen')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Gagal menjual panen')),
+          SnackBar(content: Text('Panen berhasil dijual dan saldo ditambahkan')),
         );
       }
     } catch (e) {
